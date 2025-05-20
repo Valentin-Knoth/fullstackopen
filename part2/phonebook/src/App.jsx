@@ -3,11 +3,13 @@ import Person from "./components/Person";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import servicePersons from "./services/person";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filteredPersons, setFilteredPersons] = useState([...persons]);
-
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState(false);
   useEffect(() => {
     servicePersons
       .getAll()
@@ -27,9 +29,20 @@ const App = () => {
         .then(() => {
           setPersons((prev) => prev.filter((p) => p.id !== person.id));
           setFilteredPersons((prev) => prev.filter((p) => p.id !== person.id));
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          setErrorMessage("Deleted successfully");
+          setError(false);
         })
         .catch((error) => {
-          console.error("Error deleting person:", error);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          setErrorMessage(
+            `Information of ${person.name} has already been removed from server`
+          );
+          setError(true);
         });
     }
   };
@@ -56,9 +69,17 @@ const App = () => {
       ) : (
         <div>
           <h2>Phonebook</h2>
+          {errorMessage !== null && (
+            <Notification message={errorMessage} error={error}></Notification>
+          )}
           <Filter handleFilter={handleFilter} />
           <h4>add a new</h4>
-          <PersonForm persons={persons} setPersons={updatePersons} />
+          <PersonForm
+            persons={persons}
+            setPersons={updatePersons}
+            setError={setError}
+            setErroMessage={setErrorMessage}
+          />
           <h2>Numbers</h2>
           <Person persons={filteredPersons} handleDeleteFunct={handleDelete} />
         </div>

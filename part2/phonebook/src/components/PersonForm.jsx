@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import servicePersons from "../services/person";
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ persons, setPersons, setErroMessage, setError }) => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
 
@@ -13,17 +13,26 @@ const PersonForm = ({ persons, setPersons }) => {
     const newPersona = {
       name: newName,
       number: newPhone,
-      id: persons.length + 1,
+      id: `${persons.length + 1}`,
     };
     if (newName && newPhone && !personaNueva) {
+      servicePersons.create(newPersona);
       setPersons(persons.concat(newPersona));
+      setErroMessage(`Created ${newPersona.name} with number ${newPhone}`);
     } else {
       window.confirm("Update the number?") &&
         servicePersons.update(personaNueva.id, newPersona);
+      setErroMessage(
+        `Updated ${personaNueva.name} with new number ${newPhone}`
+      );
       setPersons(
         persons.map((i) => (i.id === personaNueva.id ? newPersona : i))
       );
     }
+    setTimeout(() => {
+      setErroMessage(null);
+    }, 5000);
+    setError(false);
     setNewName("");
     setNewPhone("");
   };

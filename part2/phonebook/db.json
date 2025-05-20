@@ -1,19 +1,9 @@
 {
   "persons": [
     {
-      "id": "2",
-      "name": "Jane Smith",
-      "number": "987-654-3210"
-    },
-    {
-      "id": "3",
-      "name": "Alice Johnson",
-      "number": "555-555-5555"
-    },
-    {
-      "name": "adsa",
-      "number": "43242342",
-      "id": "4"
+      "id": "1",
+      "name": "John Doe",
+      "number": "1234567890"
     }
   ]
 }
